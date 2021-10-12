@@ -13,7 +13,14 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use(express.json());
+
+//users routes:
+app.use("/user", require("./routes/user"));
+
 app.use("/product", require("./routes/product"));
+
+//category routes
+app.use("/category", require("./routes/category"));
 
 app.listen(3030, () => {
   console.log("Server is running at port 3030");

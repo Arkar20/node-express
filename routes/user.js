@@ -22,7 +22,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, isAdmin } = req.body;
   const passwordHashed = bcrypt.hashSync(password, 12);
   //validation middleware
   const userInDB = await User.findOne({ email }).catch((err) => res.json(err));
@@ -32,6 +32,7 @@ router.post("/create", async (req, res) => {
     name,
     email,
     password: passwordHashed,
+    isAdmin,
   });
   const saveResult = await user.save().catch((err) => {
     res.json(err);
@@ -64,9 +65,13 @@ router.post("/login", async (req, res) => {
 
   if (!passwordMatch) return res.json({ err: "Password Do not match!" });
 
-  const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-    expiresIn: 3600,
-  });
+  const token = await jwt.sign(
+    { email: user.email, isAdmin: user.isAdmin },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: 3600,
+    }
+  );
 
   return res.json({ token, user });
 });

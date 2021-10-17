@@ -14,7 +14,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use(express.json());
-app.use(authJwt());
+// app.use(authJwt());
 
 const errorHandler = require("./helper/errorHandler");
 app.use(errorHandler);
@@ -23,7 +23,7 @@ app.use(errorHandler);
 app.use("/user", require("./routes/user"));
 
 app.use("/product", require("./routes/product"));
-
+app.use("/order", require("./routes/order"));
 //category routes
 app.use("/category", require("./routes/category"));
 

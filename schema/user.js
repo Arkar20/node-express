@@ -15,6 +15,13 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
 });
+UserSchema.virtual("id", () => this._id.toHexString());
+
+UserSchema.set("toJSON", { virtuals: true });
 
 module.exports = mongoose.model("User", UserSchema);

@@ -17,8 +17,7 @@ router.post("/", async (req, res) => {
 
 router.get("", async (req, res) => {
   try {
-    console.log(req.query);
-    const result = await Category.find({});
+    const result = await Category.find().select("-_id");
 
     res.status(200).json(result);
   } catch (err) {

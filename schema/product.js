@@ -25,8 +25,9 @@ const ProductSchema = new Schema({
   ],
   desc: String,
   price: {
-    type: String,
+    type: Number,
     required: true,
+    default: 90,
   },
   category: {
     type: Schema.Types.ObjectId,
@@ -37,5 +38,11 @@ const ProductSchema = new Schema({
     default: false,
   },
 });
+
+ProductSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+ProductSchema.set("toJSON", { virtuals: true });
 
 module.exports = mongoose.model("Product", ProductSchema);

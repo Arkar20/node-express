@@ -1,0 +1,10 @@
+{
+  "orderItems": [
+    { "product": "616323c7907b3854aeae9482", "qty": 2 },
+    { "product": "61632439ffae3ba44c0ac5cd", "qty": 2 },
+    { "product": "61632444ffae3ba44c0ac5d0", "qty": 2 }
+  ],
+  "user": "6166e457fb2e7dd0aa60133d",
+  "shippingaddress": "Yangon",
+  "totalAmount": 100
+}

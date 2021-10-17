@@ -7,5 +7,8 @@ const CategorySchema = new Schema({
     required: true,
   },
 });
-
+CategorySchema.virtual("id", function () {
+  return this._id.toHexString();
+});
+CategorySchema.set("toJSON", { virtuals: true });
 module.exports = mongoose.model("Category", CategorySchema);

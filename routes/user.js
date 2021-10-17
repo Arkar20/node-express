@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
     const results = await User.find({}).select("-password");
     res.status(202).json(results);
   } catch (err) {
-    res.send("Something went wrong. Please try again");
+    res.json({ err });
   }
 });
 router.get("/:id", async (req, res) => {
@@ -43,7 +43,17 @@ router.post("/create", async (req, res) => {
 });
 
 //delete route
+router.delete("/delete", async (req, res) => {
+  try {
+    const result = await User.findByIdAndRemove(req.body.id).catch((err) =>
+      res.json({ err })
+    );
 
+    return res.json({ msg: "User Successfully DEleted" });
+  } catch (err) {
+    res.send({ err });
+  }
+});
 //update route
 
 router.post("/login", async (req, res) => {
@@ -55,7 +65,7 @@ router.post("/login", async (req, res) => {
   if (!passwordMatch) return res.json({ err: "Password Do not match!" });
 
   const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRATION_TIME,
+    expiresIn: 60,
   });
 
   return res.json({ token, user });

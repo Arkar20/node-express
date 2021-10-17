@@ -3,7 +3,7 @@ const router = express.Router();
 // const mongoose = require("mongoose");
 const Category = require("../schema/category");
 
-router.post("/create", async (req, res) => {
+router.post("/", async (req, res) => {
   const { name } = req.body;
   //   console.log(req);
   try {
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
   }
 });
 //delete routes
-router.delete("/:id/delete", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const category = await Category.findByIdAndRemove(req.params.id);
     return res.send("Category Delete Successfully");
@@ -35,7 +35,7 @@ router.delete("/:id/delete", async (req, res) => {
 });
 
 //update router
-router.put("/:id/update", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const { name } = req.body;
   try {
     const result = await Category.findByIdAndUpdate(req.params.id, {

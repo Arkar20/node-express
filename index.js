@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 app.use(morgan("tiny"));
+const authJwt = require("./helper/authJwt");
 
 require("dotenv/config");
 
@@ -13,6 +14,10 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use(express.json());
+app.use(authJwt());
+
+const errorHandler = require("./helper/errorHandler");
+app.use(errorHandler);
 
 //users routes:
 app.use("/user", require("./routes/user"));

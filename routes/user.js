@@ -65,7 +65,7 @@ router.post("/login", async (req, res) => {
   if (!passwordMatch) return res.json({ err: "Password Do not match!" });
 
   const token = await jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-    expiresIn: 60,
+    expiresIn: 3600,
   });
 
   return res.json({ token, user });

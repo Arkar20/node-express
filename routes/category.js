@@ -15,8 +15,9 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("", async (req, res) => {
   try {
+    console.log(req.query);
     const result = await Category.find({});
 
     res.status(200).json(result);

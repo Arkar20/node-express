@@ -6,7 +6,7 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
-  stockqyt: {
+  stockqty: {
     type: Number,
     required: true,
   },
@@ -31,6 +31,10 @@ const ProductSchema = new Schema({
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",
+  },
+  isFeatured: {
+    type: Boolean,
+    default: false,
   },
 });
 

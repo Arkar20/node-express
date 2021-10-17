@@ -5,7 +5,13 @@ function authJwt() {
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
   }).unless({
-    path: ["/category", "/product", "/user/create", "/user/login"],
+    path: [
+      { url: /\/product(.*)/, methods: ["GET", "OPTIONS"] },
+      { url: /\/category(.*)/, methods: ["GET", "OPTIONS"] },
+
+      "/user/create",
+      "/user/login",
+    ],
   });
 }
 module.exports = authJwt;

@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
 
 router.get("", async (req, res) => {
   try {
-    const result = await Category.find().select("-_id");
+    const result = await Category.find().select("id name");
 
     res.status(200).json(result);
   } catch (err) {

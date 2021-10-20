@@ -16,11 +16,12 @@ const ProductSchema = new Schema({
   },
   image: {
     type: String,
-    default: "",
+    required: true,
   },
-  images: [
+  galllaryimages: [
     {
       type: String,
+      required: false,
     },
   ],
   desc: String,

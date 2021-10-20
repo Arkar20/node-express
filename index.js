@@ -19,6 +19,8 @@ app.use(express.json());
 const errorHandler = require("./helper/errorHandler");
 app.use(errorHandler);
 
+app.use("/public/uploads", express.static(__dirname + "/public/uploads")); //making static folders to be visible in browser
+
 //users routes:
 app.use("/user", require("./routes/user"));
 

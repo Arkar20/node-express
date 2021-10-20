@@ -3,10 +3,46 @@ const router = express.Router();
 
 const Product = require("../schema/product.js");
 
+//multer for file uploads
+const multer = require("multer");
+
+const filepath = "public/uploads";
+
+const Allow_IMG_TYPE = {
+  "image/png": "png",
+  "image/jpeg": "jpeg",
+  "image/jpg": "jpg",
+};
+//for file uploading
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const extension = Allow_IMG_TYPE[file.mimetype];
+    var error = new Error("IMG type invalid");
+    if (extension) error = null;
+    cb(error, filepath);
+  },
+  filename: function (req, file, cb) {
+    const fileName = file.originalname.replace(" ", "-");
+    const extension = Allow_IMG_TYPE[file.mimetype];
+
+    cb(null, `${fileName}-${Date.now()}.${extension}`);
+  },
+});
+const upload = multer({ storage: storage });
+
 //register request
-router.post("/", async (req, res) => {
-  const { name, stockqty, price, desc, category } = req.body;
-  let data = { name, stockqty, price, desc, category };
+router.post("/", upload.single("image"), async (req, res) => {
+  const { name, stockqty, price, desc, category, image } = req.body;
+  const imgname = req.file?.filename;
+  const basePath = `${req.protocol}://${req.get("host")}/${filepath}/`;
+  let data = {
+    name,
+    stockqty,
+    price,
+    desc,
+    category,
+    image: req.file ? basePath + imgname : undefined,
+  };
 
   const product = new Product(data);
   try {
@@ -50,6 +86,7 @@ router.get("/features", async (req, res) => {
     res.status(500).json({ err, msg: err.message });
   }
 });
+
 //features products by count
 router.get("/features/:count", async (req, res) => {
   try {
@@ -77,9 +114,20 @@ router.get("/:id", async (req, res) => {
 });
 
 //update request
-router.put("/:id", async (req, res) => {
+router.put("/:id", upload.single("image"), async (req, res) => {
   const { name, stockqty, price, desc, isFeatured } = req.body;
-  let data = { name, stockqty, price, desc, isFeatured };
+
+  const imgname = req.file?.filename;
+  const basePath = `${req.protocol}://${req.get("host")}/${filepath}/`;
+
+  let data = {
+    name,
+    stockqty,
+    price,
+    desc,
+    isFeatured,
+    image: req.file ? basePath + imgname : undefined,
+  };
 
   try {
     const result = await Product.findByIdAndUpdate(req.params.id, data, {
@@ -103,8 +151,34 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-async function filteredProducts(queryString) {
-  console.log(queryString);
-  return await Product.find(queryString);
-}
+//multiple products images
+router.put(
+  "/galllary-images/:id",
+  upload.array("images", 10),
+  async (req, res) => {
+    try {
+      const basePath = `${req.protocol}://${req.get("host")}/`;
+
+      const data = req.files;
+
+      const imagesArray =
+        data.length != 0 ? data.map((image) => `${basePath}${image.path}`) : [];
+
+      console.log(imagesArray);
+
+      if (imagesArray.length == 0) {
+        return res.json({ msg: "No images To Upload" });
+      }
+      const productUpdate = await Product.findByIdAndUpdate(
+        req.params.id,
+        { galllaryimages: imagesArray },
+        { new: true }
+      ).catch((err) => res.json({ msg: err.message }));
+
+      return res.status(203).json(productUpdate);
+    } catch (err) {
+      return res.status(500).json({ err, msg: "Product Not Found!" });
+    }
+  }
+);
 module.exports = router;
